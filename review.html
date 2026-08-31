@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>InstaClean</title>
+    <link rel="icon" type="image/png" href="icons/instaclean.png">
+    <link rel="stylesheet" href="review.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>InstaClean</h1>
+        </div>
+        <div class="session-pill" id="sessionPill">Checking session</div>
+      </header>
+
+      <section class="upload-band" aria-labelledby="uploadTitle">
+        <div>
+          <h2 id="uploadTitle">Upload usernames</h2>
+          <p>Choose a CSV. Blank cells, duplicates, and invalid handles are removed before review.</p>
+        </div>
+        <label class="file-control">
+          <input id="csvInput" type="file" accept=".csv,text/csv">
+          <span>Choose CSV</span>
+        </label>
+      </section>
+
+      <section class="analyzer-section" aria-labelledby="analyzerTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Follower intelligence</p>
+            <h2 id="analyzerTitle">Instagram follower analyzer</h2>
+          </div>
+          <span id="ig-status" class="session-pill">Inactive</span>
+        </div>
+
+        <div class="analyzer-actions">
+          <button id="ig-run" class="primary-button" type="button">Run Analysis</button>
+          <button id="ig-export-csv" class="secondary-button" type="button" disabled>Export CSV</button>
+          <button id="ig-reset" class="secondary-button danger-button" type="button">Reset Data</button>
+        </div>
+
+        <div id="ig-progress-container" class="progress-track analyzer-progress" hidden>
+          <div id="ig-progress-bar" class="progress-bar"></div>
+        </div>
+
+        <div id="ig-tabs" class="analyzer-tabs" role="tablist" aria-label="Analyzer views">
+          <button class="ig-tab-btn active" type="button" data-target="ig-log">Logs</button>
+          <button class="ig-tab-btn" type="button" data-target="ig-view-history">History</button>
+          <button class="ig-tab-btn" type="button" data-target="ig-view-notfollowing">Not Following</button>
+          <button class="ig-tab-btn" type="button" data-target="ig-view-fans">Fans</button>
+          <button class="ig-tab-btn" type="button" data-target="ig-view-mutuals">Mutuals</button>
+          <button class="ig-tab-btn" type="button" data-target="ig-view-unfollowers">Unfollowers</button>
+          <button class="ig-tab-btn" type="button" data-target="ig-view-deactivated">Deactivated</button>
+          <button class="ig-tab-btn" type="button" data-target="ig-view-blocked">Blocked</button>
+          <button class="ig-tab-btn" type="button" data-target="ig-view-renamed">Renamed</button>
+        </div>
+
+        <div class="analyzer-views">
+          <div id="ig-log" class="ig-view ig-view-container active"></div>
+          <div id="ig-view-history" class="ig-view ig-view-container"></div>
+          <div id="ig-view-notfollowing" class="ig-view ig-view-container"></div>
+          <div id="ig-view-fans" class="ig-view ig-view-container"></div>
+          <div id="ig-view-mutuals" class="ig-view ig-view-container"></div>
+          <div id="ig-view-unfollowers" class="ig-view ig-view-container"></div>
+          <div id="ig-view-deactivated" class="ig-view ig-view-container"></div>
+          <div id="ig-view-blocked" class="ig-view ig-view-container"></div>
+          <div id="ig-view-renamed" class="ig-view ig-view-container"></div>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Queue stats">
+        <div>
+          <span id="validCount">0</span>
+          <p>valid handles</p>
+        </div>
+        <div>
+          <span id="activeCount">0</span>
+          <p>selected</p>
+        </div>
+        <div>
+          <span id="removedCount">0</span>
+          <p>dismissed</p>
+        </div>
+        <div>
+          <span id="failedCount">0</span>
+          <p>failed</p>
+        </div>
+      </section>
+
+      <section class="progress-panel" aria-live="polite">
+        <div class="progress-copy">
+          <p id="progressLabel">No queue running</p>
+          <strong id="progressNumbers">0 / 0</strong>
+        </div>
+        <div class="progress-track">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div id="cooldownTimer" class="cooldown-timer" hidden>
+          <span id="cooldownValue">20s</span>
+          <small>Cooldown</small>
+        </div>
+      </section>
+
+      <section class="actions-row">
+        <button id="unfollowButton" class="primary-button" type="button" disabled>Unfollow All</button>
+        <label class="delay-control">
+          <span>Delay</span>
+          <input id="delayInput" type="number" min="1" max="10" step="1" value="1">
+          <span>s</span>
+        </label>
+        <button id="pauseButton" class="secondary-button" type="button" disabled>Pause Queue</button>
+        <button id="resumeButton" class="secondary-button" type="button" disabled>Resume Queue</button>
+        <button id="cancelButton" class="secondary-button" type="button" disabled>Cancel Queue</button>
+        <button id="undoExclusionButton" class="secondary-button" type="button" disabled>Undo Exclusion</button>
+        <button id="editExclusionsButton" class="secondary-button" type="button">Edit Exclusions</button>
+      </section>
+
+      <section class="grid-section" aria-labelledby="gridTitle">
+        <div class="section-heading">
+          <h2 id="gridTitle">Review accounts</h2>
+          <p id="gridStatus">Upload a CSV to begin.</p>
+        </div>
+        <div id="accountGrid" class="account-grid"></div>
+      </section>
+
+      <section class="log-section" aria-labelledby="logTitle">
+        <h2 id="logTitle">Activity log</h2>
+        <ol id="activityLog" class="activity-log"></ol>
+      </section>
+    </main>
+
+    <div id="exclusionsModal" class="modal-shell" hidden>
+      <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="exclusionsTitle">
+        <div class="modal-heading">
+          <div>
+            <p class="eyebrow">Saved filters</p>
+            <h2 id="exclusionsTitle">Edit exclusions</h2>
+          </div>
+          <button id="closeExclusionsButton" class="remove-button modal-close" type="button" aria-label="Close exclusions editor">x</button>
+        </div>
+
+        <form id="addExclusionForm" class="exclusion-form">
+          <input id="exclusionInput" type="text" placeholder="username or @username" autocomplete="off">
+          <button class="primary-button" type="submit">Add</button>
+        </form>
+
+        <div class="exclusion-toolbar">
+          <span id="exclusionCount">0 saved exclusions</span>
+          <button id="exportExclusionsButton" class="secondary-button" type="button">Export</button>
+          <button id="importExclusionsButton" class="secondary-button" type="button">Import</button>
+          <input id="importExclusionsInput" type="file" accept=".json,.csv,.txt,application/json,text/csv,text/plain" hidden>
+          <button id="clearProfileCacheButton" class="secondary-button" type="button">Clear Cache</button>
+          <button id="clearExclusionsButton" class="secondary-button danger-button" type="button">Clear All</button>
+        </div>
+
+        <div id="exclusionsList" class="exclusions-list"></div>
+      </section>
+    </div>
+
+    <script src="analyzer.js"></script>
+    <script src="review.js"></script>
+  </body>
+</html>

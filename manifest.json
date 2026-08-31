@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "InstaClean",
+  "version": "4.32",
+  "description": "Analyze Instagram followers and review accounts before unfollowing.",
+  "icons": {
+    "16": "icons/instaclean.png",
+    "32": "icons/instaclean.png",
+    "48": "icons/instaclean.png",
+    "128": "icons/instaclean.png"
+  },
+  "permissions": [
+    "cookies",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.instagram.com/*",
+    "https://i.instagram.com/*",
+    "https://*.cdninstagram.com/*",
+    "https://*.fbcdn.net/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; img-src 'self' data: blob: https://*.cdninstagram.com https://*.fbcdn.net https://www.instagram.com https://i.instagram.com;"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "InstaClean",
+    "default_icon": {
+      "16": "icons/instaclean.png",
+      "32": "icons/instaclean.png",
+      "48": "icons/instaclean.png",
+      "128": "icons/instaclean.png"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+# Build output
+dist/
+build/
+*.zip
+
+# Secrets — never commit these
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor noise
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Local scratch harnesses
+.route-chain-test.js
+.dom-wiring-check.js
+.features-check.js
